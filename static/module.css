@@ -1,0 +1,18 @@
+.card-stream .card-body .card-title{
+    height: 24px;
+    overflow: hidden;
+}
+
+.card-stream .card-img-top{
+    height: 250px;
+    object-fit: cover;
+}
+
+.card-stream a{
+    color: inherit;
+    text-decoration: none;
+}
+
+.card-stream a:hover{
+    color: var(--bs-link-color);
+}

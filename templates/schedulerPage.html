@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<body class="d-flex flex-column min-vh-100" data-projectid="mb">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
+<link rel="stylesheet" href="static/datatables.css">
+<link rel="stylesheet" href="static/datatables.min.css">
+<link rel="stylesheet" href="static/bootstrap.min.css">
+<script src="static/jquery-3.6.1.min.js"></script>
+<script type="text/javascript" src="static/datatables.js"></script>
+<script type="text/javascript" src="static/datatables.min.js"></script>
+<nav style="--bs-bg-opacity: 1; background-color: #2196f3!important;">
+
+    <div class="container-fluid">
+        <a style="align-items: center!important;display: flex!important;color:white;" class="navbar-brand d-flex align-items-center text-wrap" href="http://140.115.51.245:5000/index">
+            <img style="width: 35px; height: 35px;" src="static/logo.png" class="d-inline-block mx-3 my-1">
+            Automatic Scale Measure Reading (Demo)      </a>
+    </div>
+</nav>
+<div class="container-fluid mt-4 mb-2" style="min-height:500px;">
+    <div class="card station-card mb-4" style="min-height:100px;">
+        <div id="div0" name="div0" class="card-body">
+
+        </div>
+    </div>
+    <div class="card station-card mb-4" style="min-height:200px;">
+        <div id="div1" name="div1" class="card-body"/>
+    </div>
+    <!--<img src="{{url_for('static', filename='STN1/STN_0001_F91380802_20220913101250053_TIMING.jpg')}}" align="middle" />-->
+    <div id="loading" name="loading" style="display:none;margin:auto;position:absolute;background:black;opacity: 0.5;width:100%;height:100%;">
+        <img style="width:20%;margin:auto;margin-top:25%;margin-left:40%;" src="static/loading2.gif"/>
+    </div>
+</div>
+<div id="js" name="js"></div>
+</body>
+<script>
+get_scheduler();
+
+function upd_scheduler(){
+  time_minutes = $("#time_minutes").val();
+  if( $("#time_minutes").val().length === 0 ) {
+      alert("The duration is empty");
+  }else{
+      $('#loading').css('display', 'block'); $.ajax({type : 'POST',url: '/upd_scheduler',data : {'time_minutes':time_minutes},
+        success: function(result){
+        $("#div1").html(result);
+        $('#loading').css('display', 'none');
+      }});
+  }
+}
+function get_scheduler() {
+  $('#loading').css('display', 'block');
+  $.ajax({type : 'POST',url: '/get_scheduler',success: function(result){
+    $("#div1").html(result);
+    $('#loading').css('display', 'none');
+  }});
+}
+
+</script>
+</html>

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<body class="d-flex flex-column min-vh-100" data-projectid="mb">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
+<link rel="stylesheet" href="static/datatables.css">
+<link rel="stylesheet" href="static/datatables.min.css">
+<link rel="stylesheet" href="static/bootstrap.min.css">
+<script src="static/jquery-3.6.1.min.js"></script>
+<script type="text/javascript" src="static/datatables.js"></script>
+<script type="text/javascript" src="static/datatables.min.js"></script>
+<nav style="--bs-bg-opacity: 1; background-color: #2196f3!important;">
+
+    <div class="container-fluid">
+        <a style="align-items: center!important;display: flex!important;color:white;" class="navbar-brand d-flex align-items-center text-wrap" href="http://140.115.51.245:5000/index">
+            <img style="width: 35px; height: 35px;" src="static/logo.png" class="d-inline-block mx-3 my-1">
+            โครงการส่งน้ำและบำรุงรักษามูลบน สำนักงานชลประทานที่ 8        </a>
+    </div>
+</nav>
+<div class="container-fluid mt-4 mb-2" style="min-height:500px;">
+    <div class="card station-card mb-4" style="min-height:100px;">
+        <div id="div0" name="div0" class="card-body">
+
+        </div>
+    </div>
+    <div class="card station-card mb-4" style="min-height:200px;">
+        <div>
+            <form method=POST action="add_STN" enctype=multipart/form-data >
+                    <h2>Station Name</h2><input type="text" name="stn_name" id="stn_name" />
+                    <h2>---</h2><input type="submit" value="Submit">
+                </form>
+        </div>
+        <div>
+            <div id="upload_file" style="width:50%;float:left;">
+                <form method=POST action="add_Mask" enctype=multipart/form-data >
+                    <h2>Station Name</h2><input type="text" name="stn_name" id="stn_name" />
+                    <h2>Upload Mask Image</h2><input type="file" name="file" id="file" />
+                    <h2>Station Max Meter (m)</h2><input type="text" name="meter" id="meter" />
+                    <h2>Station Max Centimeter (cm)</h2><input type="text" name="centimeter" id="centimeter" />
+                    <h2>Station Scale </h2><input type="text" name="scale" id="scale" />
+                    <h2>---</h2><input type="submit" value="Submit">
+                </form>
+            </div>
+            <div style="width:50%;float:left;">
+                <img style="width:100%;" src="static/STN Masking.png"/>
+            </div>
+        </div>
+    </div>
+    <!--<img src="{{url_for('static', filename='STN1/STN_0001_F91380802_20220913101250053_TIMING.jpg')}}" align="middle" />-->
+    <div id="loading" name="loading" style="display:none;margin:auto;position:absolute;background:black;opacity: 0.5;width:100%;height:100%;">
+        <img style="width:20%;margin:auto;margin-top:25%;margin-left:40%;" src="static/loading2.gif"/>
+    </div>
+</div>
+<div id="js" name="js"></div>
+</body>
+<script>
+
+</script>
+<script>
+getlistSTNadd();
+
+function getlistSTNadd() {
+  $('#loading').css('display', 'block');
+  $.ajax({type : 'POST',url: '/getlistSTNadd',success: function(result){
+    $("#div0").html(result);
+    $('#loading').css('display', 'none');
+  }});
+}
+function getlistSTNjs() {
+  $('#loading').css('display', 'block');
+  $.ajax({type : 'POST',url: '/getlistSTNjsadd',success: function(result){
+    $("#js").html(result);
+
+    getlistSTN();
+  }});
+}
+function get_STN2(funct) {
+  $('#loading').css('display', 'block');
+  $.ajax({type : 'POST',url: '/get_STN',data : {'data':funct}, success: function(result){
+    $("#div1").html(result);
+    $('#loading').css('display', 'none');
+    if(funct=="STN2"){
+        $('#TSL32').html("TSL30");
+        $('#TSL32').html("TSL32");
+        $('#STN2').html("<b>STN2</b>");
+        $('#STN3').html("STN3");
+        $('#download').html(" | <b onclick=\"tableToCSV('STN2')\">Download CSV</b>");
+        $('#upload').html('<div id="upload_file" class="form-group mb-4"><h3>Upload new File</h3><form method=POST action="upload_file" enctype=multipart/form-data ><input type="file" name="file" directory="" /><input type="hidden" id="stn" name="stn" value="STN2"><input type="submit" value="Submit"></form></div>');
+    }
+    else if(funct=="STN3"){
+        $('#TSL32').html("TSL30");
+        $('#TSL32').html("TSL32");
+        $('#STN3').html("<b>STN3</b>");
+        $('#STN2').html("STN2");
+        $('#download').html(" | <b onclick=\"tableToCSV('STN3')\">Download CSV</b>");
+        $('#upload').html('<div id="upload_file" class="form-group mb-4"><h3>Upload new File</h3><form method=POST action="upload_file" enctype=multipart/form-data ><input type="file" name="file" directory="" /><input type="hidden" id="stn" name="stn" value="STN3"><input type="submit" value="Submit"></form></div>');
+    }
+    else if(funct=="TSL32"){
+        $('#TSL32').html("TSL30");
+        $('#TSL32').html("<b>TSL32</b>");
+        $('#STN2').html("STN2");
+        $('#STN3').html("STN3");
+        $('#download').html(" | <b onclick=\"tableToCSV('TSL32')\">Download CSV</b>");
+        $('#upload').html('<div id="upload_file" class="form-group mb-4"><h3>Upload new File</h3><form method=POST action="upload_file" enctype=multipart/form-data ><input type="file" name="file" directory="" /><input type="hidden" id="stn" name="stn" value="TSL32"><input type="submit" value="Submit"></form></div>');
+    }
+    else if(funct=="TSL30"){
+        $('#TSL32').html("<b>TSL30</b>");
+        $('#TSL32').html("TSL32");
+        $('#STN2').html("STN2");
+        $('#STN3').html("STN3");
+        $('#download').html(" | <b onclick=\"tableToCSV('TSL30')\">Download CSV</b>");
+        $('#upload').html('<div id="upload_file" class="form-group mb-4"><h3>Upload new File</h3><form method=POST action="upload_file" enctype=multipart/form-data ><input type="file" name="file" directory="" /><input type="hidden" id="stn" name="stn" value="TSL30"><input type="submit" value="Submit"></form></div>');
+    }
+    $('#myTable').DataTable( {
+        responsive: true,
+
+    } );
+  }});
+}
+function tableToCSV(fff) {
+
+            // Variable to store the final csv data
+            var csv_data = [];
+
+            // Get each row data
+            var rows = document.getElementsByTagName('tr');
+            for (var i = 0; i < rows.length; i++) {
+
+                // Get each column data
+
+                var cols = rows[i].querySelectorAll('td,th');
+
+                // Stores each csv row data
+                var csvrow = [];
+                for (var j = 0; j < cols.length; j++) {
+                    if(j!=2){
+                    // Get the text data of each cell
+                    // of a row and push it to csvrow
+                    csvrow.push(cols[j].innerHTML);
+                    }
+                }
+
+                // Combine each column value with comma
+                csv_data.push(csvrow.join(","));
+            }
+
+            // Combine each row data with new line character
+            csv_data = csv_data.join('\n');
+
+            // Call this function to download csv file
+            downloadCSVFile(csv_data,fff);
+
+        }
+
+        function downloadCSVFile(csv_data,fff) {
+
+            // Create CSV file object and feed
+            // our csv_data into it
+            CSVFile = new Blob([csv_data], {
+                type: "text/csv"
+            });
+
+            // Create to temporary link to initiate
+            // download process
+            var temp_link = document.createElement('a');
+
+            // Download csv file
+            temp_link.download = "STN"+fff+".csv";
+            var url = window.URL.createObjectURL(CSVFile);
+            temp_link.href = url;
+
+            // This link should not be displayed
+            temp_link.style.display = "none";
+            document.body.appendChild(temp_link);
+
+            // Automatically click the link to
+            // trigger download
+            temp_link.click();
+            document.body.removeChild(temp_link);
+        }
+
+if('{{ stn_up }}'!=='0'){
+    get_STN('{{ stn_up }}')
+}
+</script>
+</html>
